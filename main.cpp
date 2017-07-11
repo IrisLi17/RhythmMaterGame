@@ -1,4 +1,7 @@
-#include "rhythmmater.h"
+#include "MainWindow.h"
+#include "Block.h"
+#include "baseLine.h"
+#include "GameController.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])

@@ -2,7 +2,9 @@
 #define GAMECONTROLLER_H
 
 #include <qtimer.h>
+#include <qgraphicsscene.h>
 
+class Block;
 class GameController:public QObject
 {
     Q_OBJECT
