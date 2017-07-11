@@ -11,6 +11,7 @@ public:
     QRectF boundingRect();
     QPainterPath shape();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+    double getYpos();
 private:
     double dypos;
 };
