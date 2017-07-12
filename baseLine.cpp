@@ -11,7 +11,7 @@ baseLine::~baseLine()
 
 }
 
-QRectF baseLine::boundingRect()
+QRectF baseLine::boundingRect() const
 {
     return QRectF(0.0,dypos-0.5,200.0,1.0);
 }

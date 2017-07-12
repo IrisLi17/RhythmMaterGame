@@ -5,15 +5,13 @@
 #include <qgraphicsscene.h>
 #include <vector>
 
-int clist[10] = {0,1,2,3,2,1,0,1,2,3};
-double lenlist[10] = {10.0,15.0,8.0,12.0,5.0,1.0,1.0,2.0,1.0,10.0};
-std::vector<int> vChannels;
-std::vector<double> vLengths;
-vChannels.assign(clist,clist + sizeof(clist)/sizeof(int));
-vLengths.assign(lenlist,lenlist +sizeof(lenlist)/sizeof(double));
+//vChannels.assign(clist,clist + sizeof(clist)/sizeof(int));
+//vLengths.assign(lenlist,lenlist +sizeof(lenlist)/sizeof(double));
 
 class Block;
 class baseLine;
+
+//need to associate song to the game
 class GameController:public QObject
 {
     Q_OBJECT
@@ -21,8 +19,8 @@ class GameController:public QObject
 public:
     GameController(QGraphicsScene &scene, QObject *parent = 0);
     ~GameController();
-    void blockEnterline();
-    void blockExitline();
+    //void blockEnterline();
+    //void blockExitline();
 
 private slots:
     void pause();
@@ -33,7 +31,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    void handleKeyDown(QEvent *event);
+    void handleKeyDown(QKeyEvent *event);
     void handleKeyUp();
     void blockDrop();
     void judgeCh1();

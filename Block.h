@@ -7,15 +7,16 @@ class GameController;
 class Block:public QGraphicsItem
 {
 public:
-    Block(int ichannel, double dlength, double dypos, GameController &gctrl); 
+    Block(int ichannel, double dlength, double dypos); 
+	Block(const Block&);
 	~Block();
     QRectF boundingRect() const;
     QPainterPath shape();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     //void move();
-    int getCh();
-    double getYpos();
-    double getLength();
+    int getCh() const;
+	double getYpos() const;
+    double getLength() const;
     double getEnterPos();
     double getExitPos();
     void setEnterPos(double p);
@@ -36,6 +37,6 @@ private:
     double enterPos;
     double exitPos;
     double score;
-    GameController &gctrl;
+    //GameController *gctrl;
 };
 #endif

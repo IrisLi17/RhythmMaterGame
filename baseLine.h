@@ -8,7 +8,7 @@ class baseLine:public QGraphicsItem
 public:
     baseLine(double y = 1.0);
     ~baseLine();
-    QRectF boundingRect();
+    QRectF boundingRect() const;
     QPainterPath shape();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     double getYpos();

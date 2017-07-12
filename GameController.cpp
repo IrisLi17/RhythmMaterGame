@@ -1,4 +1,7 @@
 #include "GameController.h"
+#include "Block.h"
+#include "baseLine.h"
+#include <QKeyEvent>
 
 GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene)
 {
@@ -6,10 +9,10 @@ GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(p
     totalScore = 0.0;
     for(int loop = 0; loop<vChannels.size(); loop++)
     {
-        allBlocks.append(Block(vChannels[loop], vLengths[loop], vLengths[loop], *this));
-        scene.addItem(Block(vChannels[loop], vLengths[loop], vLengths[loop], *this));
+        allBlocks.append(Block(vChannels[loop], vLengths[loop], vLengths[loop]));
+        scene.addItem(&Block(vChannels[loop], vLengths[loop], vLengths[loop]));
     }
-    curBlock = allBlocks[0];
+    curBlock = &allBlocks[0];
     bline = new baseLine(); 
 
     timer.start( 1000/33 );       
@@ -34,7 +37,7 @@ void GameController::pause()
     isPause = true;
 }
 
-void GameController::gameOver()
+void GameController::gameover()
 {
     disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));    
     exit(0);
@@ -120,7 +123,7 @@ void GameController::blockDrop()
     {
         inum += 1;
         scene.removeItem(curBlock);
-        curBlock = Block(vChannels[inum], vLengths[inum], vLengths[inum], *this);
+        curBlock = &Block(vChannels[inum], vLengths[inum], vLengths[inum]);
         scene.addItem(curBlock);
     }
     else if(inum >= vChannels.size())
@@ -150,12 +153,12 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
     }
 }
 
-void GameController::blockEnterline()
-{
-    handleKeyDown();
-}
+//void GameController::blockEnterline()
+//{
+ //   handleKeyDown();
+//}
 
-void GameController::blockExitline()
-{
-    handleKeyUp();
-}
+//void GameController::blockExitline()
+//{
+//    handleKeyUp();
+//}

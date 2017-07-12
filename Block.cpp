@@ -2,11 +2,21 @@
 #include <qpainter.h>
 
 class GameController;
-Block::Block(int ich, double dl, double dyp, GameController &gctrl):ichannel(ich),dlength(dl),dypos(dyp),gctrl(gctrl)
+Block::Block(int ich, double dl, double dyp):ichannel(ich),dlength(dl),dypos(dyp)
 {
     dspeed = 2.0;
     enterPos = 0.0;
     exitPos = dl;
+}
+
+Block::Block(const Block& b)
+{
+	ichannel = b.getCh();
+	dlength = b.getLength();
+	dypos = b.getYpos();
+	dspeed = 2.0;
+	enterPos = 0.0;
+	exitPos = dlength;
 }
 
 Block::~Block()
@@ -38,16 +48,16 @@ void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *
 //    dypos += dspeed;
 //}
 
-int Block::getCh()
+int Block::getCh() const
 {
     return ichannel;
 }
-double Block::getYpos()
+double Block::getYpos() const
 {
     return dypos;
 }
 
-double Block::getLength()
+double Block::getLength()const
 {
     return dlength;
 }
