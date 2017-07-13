@@ -19,7 +19,9 @@ class GameController:public QObject
 public:
     GameController(QGraphicsScene &scene, QObject *parent = 0);
     ~GameController();
-    //void blockEnterline();
+    void redirect();
+	double totalScore;
+	//void blockEnterline();
     //void blockExitline();
 
 private slots:
@@ -33,12 +35,16 @@ protected:
 private:
     void handleKeyDown(QKeyEvent *event);
     void handleKeyUp();
-    void blockDrop();
+    //void blockDrop();
+	
     void judgeCh1();
     void judgeCh2();
     void judgeCh3();
     void judgeCh4();
 
+	int vChannels[10];
+	double vLengths[10];
+	double vYpos[10];
     int inum;
     QTimer timer;
     QGraphicsScene &scene;
@@ -46,6 +52,6 @@ private:
     QList<Block> allBlocks;
     baseLine *bline;
     bool isPause;
-    double totalScore;
+    //double totalScore;
 };
 #endif

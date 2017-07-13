@@ -1,6 +1,6 @@
 #include "baseLine.h"
 #include <qpainter.h>
-
+#include <iostream>
 baseLine::baseLine(double y):dypos(y)
 {
 
@@ -25,6 +25,7 @@ QPainterPath baseLine::shape()
 
 void baseLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+	std::clog<<"ready to paint baseline!"<<std::endl;
     painter->save();
     painter->fillPath(shape(),QBrush(QColor(0,0,255)));
     painter->restore();

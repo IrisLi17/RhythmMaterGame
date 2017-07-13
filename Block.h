@@ -2,18 +2,19 @@
 #define BLOCK_H
 
 #include <qgraphicsitem.h>
+#include "GameController.h"
 
 class GameController;
 class Block:public QGraphicsItem
 {
 public:
-    Block(int ichannel, double dlength, double dypos); 
+	Block(int ichannel, double dlength, double dypos, GameController &gctrl); 
 	Block(const Block&);
 	~Block();
     QRectF boundingRect() const;
-    QPainterPath shape();
+    QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    //void move();
+    void move();
     int getCh() const;
 	double getYpos() const;
     double getLength() const;
@@ -24,12 +25,14 @@ public:
     double calScore(double p1, double p2);
     //void handleCollision();
     void levelup(int level);
+	void advance(int);
 
 protected:
-    void advance(int step);
+    //void advance(int);
 
 private:
     //void handleCollision();
+	//QRectF myblock;
     int ichannel;
     double dlength;
     double dypos;
@@ -37,6 +40,6 @@ private:
     double enterPos;
     double exitPos;
     double score;
-    //GameController *gctrl;
+    GameController &gctrl;
 };
 #endif

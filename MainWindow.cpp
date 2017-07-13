@@ -6,7 +6,7 @@
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent),scene(new QGraphicsScene(this)),view(new QGraphicsView(scene,this)),game(new GameController(*scene, this))
 {
     setCentralWidget(view);
-    resize(600, 600);
+	setFixedSize(200,2000);
  
     initScene();
     initSceneBackground();
@@ -26,7 +26,7 @@ void MainWindow::adjustSize()
 
 void MainWindow::initScene()
 {
-    scene->setSceneRect(0, -1800, 200, 2000);
+    scene->setSceneRect(0, -1000, 200, 2000);
 }
 
 void MainWindow::initSceneBackground()
