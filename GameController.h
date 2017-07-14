@@ -24,7 +24,7 @@ public:
 	//void blockEnterline();
     //void blockExitline();
 
-private slots:
+public slots:
     void pause();
     void resume();
     void gameover();

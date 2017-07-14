@@ -84,9 +84,9 @@ void GameController::pause()
 void GameController::gameover()
 {
     disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
-	delete bline;
+	//delete bline;
 	if (QMessageBox::Yes == QMessageBox::information(NULL,
-                            tr("Game Over"), tr("Again?"),
+                            tr("Game Over"), tr("New game?"),
                             QMessageBox::Yes | QMessageBox::No,
                             QMessageBox::Yes)) 
 	{

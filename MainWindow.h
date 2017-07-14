@@ -15,11 +15,25 @@ class MainWindow: public QMainWindow
 public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
+
 private slots:
 	void adjustSize();
+	//void newGame();
+	void gameHelp();
+	void about();
+
 private:
 	void initScene();
 	void initSceneBackground();
+    void createActions();
+    void createMenus();
+	QAction *newGameAction;
+	QAction *exitAction;
+	QAction *pauseAction;
+	QAction *resumeAction;
+	QAction *gameHelpAction;
+	QAction *aboutAction;
+	QAction *aboutQtAction;
 	QGraphicsScene *scene;
 	QGraphicsView *view;
 	GameController *game;
