@@ -11,6 +11,7 @@
 class Block;
 class baseLine;
 class scoreBox;
+class song;
 
 //need to associate song to the game
 class GameController:public QObject
@@ -46,13 +47,14 @@ private:
 	int vChannels[10];
 	double vLengths[10];
 	double vYpos[10];
-    int inum;
+    int inum;//song中的块进行到哪一个了
     QTimer timer;
     QGraphicsScene &scene;
     Block *curBlock;
     QList<Block *> allBlocks;
     baseLine *bline;
     scoreBox *scBox;
+    song *curSong;
     bool isPause;
     //double totalScore;
 };

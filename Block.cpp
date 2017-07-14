@@ -15,7 +15,7 @@ Block::Block(const Block& b):gctrl(b.gctrl)
 	ichannel = b.getCh();
 	dlength = b.getLength();
 	dypos = b.getYpos();
-	dspeed = 2.0;
+	dspeed = 4.0;
 	enterPos = 0.0;
 	exitPos = dlength;
 }
