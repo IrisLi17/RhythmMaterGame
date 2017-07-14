@@ -10,6 +10,7 @@
 
 class Block;
 class baseLine;
+class scoreBox;
 
 //need to associate song to the game
 class GameController:public QObject
@@ -51,6 +52,7 @@ private:
     Block *curBlock;
     QList<Block *> allBlocks;
     baseLine *bline;
+    scoreBox *scBox;
     bool isPause;
     //double totalScore;
 };

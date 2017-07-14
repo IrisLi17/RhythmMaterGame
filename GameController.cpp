@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "Block.h"
 #include "baseLine.h"
+#include "ScoreBox.h"
 #include <QKeyEvent>
 #include <fstream>
 #include <QDebug>
@@ -55,6 +56,8 @@ GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(p
     bline = new baseLine();      
 	//scene.addItem(curBlock);
     scene.addItem(bline);
+    scBox = new scoreBox();
+    scene.addItem(scBox);
     scene.installEventFilter(this);
     resume();   
 }
@@ -167,6 +170,7 @@ void GameController::handleKeyUp()
 assert: curBlock->getYpos()< bline->getYpos();
 	curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
     totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
+    scBox->setScore(totalScore);
 }
 void GameController::redirect()
 {

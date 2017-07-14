@@ -1,15 +1,14 @@
 #ifndef SCOREBOX_H
 #define SCOREBOX_H
 #include <qgraphicsitem.h>
-class scoreBox:public QGraphicsItem
+class scoreBox:public QGraphicsTextItem
 {
 public:
-    scoreBox();
+    scoreBox(QGraphicsItem * parent = 0);
     ~scoreBox();
-    void boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);    
-
+    void setScore(double);  
+private:
+    double score;
 };
 
 
