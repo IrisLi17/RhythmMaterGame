@@ -31,23 +31,25 @@ GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(p
 	vLengths[8] = 5.0;
 	vLengths[9] = 8.0;
 	vYpos[0] = -200.0;
-	vYpos[1] = -220.0;
-	vYpos[2] = -230.0;
-	vYpos[3] = -235.0;
-	vYpos[4] = -250.0;
+	vYpos[1] = -210.0;
+	vYpos[2] = -215.0;
+	vYpos[3] = -230.0;
+	vYpos[4] = -240.0;
 	vYpos[5] = -260.0;
-	vYpos[6] = -280.0;
-	vYpos[7] = -285.0;
-	vYpos[8] = -295.0;
-	vYpos[9] = -300.0;
+	vYpos[6] = -265.0;
+	vYpos[7] = -275.0;
+	vYpos[8] = -280.0;
+	vYpos[9] = -288.0;
     inum = 0;
     totalScore = 0.0;
     timer.start( 100 );
 	for(int loop = 0; loop<10; loop++)
     {
 		Block *temp = new Block(vChannels[loop],vLengths[loop],vYpos[loop],*this);
-		allBlocks.append(*temp);
+		allBlocks.append(temp);
 		scene.addItem(temp);
+		if(loop ==0)
+			curBlock = temp;
 	}
 	//curBlock = &(allBlocks[0]);
     bline = new baseLine();      
@@ -103,46 +105,46 @@ void GameController::gameover()
 
 void GameController::judgeCh1()
 {
-    if(allBlocks[inum].getCh() != 0 ||
-        allBlocks[inum].getYpos() + allBlocks[inum].getLength() < bline->getYpos())
+    if(curBlock->getCh() != 0 ||
+        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
         
 		gameover();
     else
     {
-        allBlocks[inum].setEnterPos(bline->getYpos() - allBlocks[inum].getYpos());
+        curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
 void GameController::judgeCh2()
 {
-    if(allBlocks[inum].getCh() != 1 ||
-        allBlocks[inum].getYpos() + allBlocks[inum].getLength() < bline->getYpos())
+    if(curBlock->getCh() != 1 ||
+        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
         gameover();
     else
     {
-        allBlocks[inum].setEnterPos(bline->getYpos() - allBlocks[inum].getYpos());
+        curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
 void GameController::judgeCh3()
 {
-    if(allBlocks[inum].getCh() != 2 ||
-        allBlocks[inum].getYpos() + allBlocks[inum].getLength() < bline->getYpos())
+	if(curBlock->getCh() != 2 ||
+        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
     else
     {
-        allBlocks[inum].setEnterPos(bline->getYpos() - allBlocks[inum].getYpos());
+        curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
 void GameController::judgeCh4()
 {
-    if(allBlocks[inum].getCh() != 3 ||
-        allBlocks[inum].getYpos() + allBlocks[inum].getLength() < bline->getYpos())
+    if(curBlock->getCh() != 3 ||
+        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
     else
     {
-        allBlocks[inum].setEnterPos(bline->getYpos() - allBlocks[inum].getYpos());
+        curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
@@ -162,22 +164,24 @@ void GameController::handleKeyDown(QKeyEvent *event)
 
 void GameController::handleKeyUp()
 {
-    assert: allBlocks[inum].getYpos()< bline->getYpos();
-    allBlocks[inum].setExitPos(bline->getYpos() - allBlocks[inum].getYpos());
-    totalScore += allBlocks[inum].calScore(allBlocks[inum].getEnterPos(),allBlocks[inum].getExitPos());
+assert: curBlock->getYpos()< bline->getYpos();
+	curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
+    totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
 }
 void GameController::redirect()
 {
-	if(allBlocks[inum].getYpos()>0&&inum <10)
+	if(curBlock->getYpos()>0&&inum <10)
 	{
 		inum +=1;
-		scene.removeItem(&(allBlocks[inum]));
+		scene.removeItem(curBlock);
 		
-		delete &(allBlocks.takeFirst());
-		//curBlock = &(allBlocks.first());
-		if(allBlocks.isEmpty())
+		delete allBlocks.takeFirst();
+		
+		if(allBlocks.isEmpty()){
 			gameover();
-		
+			return;
+		}
+		curBlock = allBlocks.first();
 	}
 }
 //move all the blocks and redirect curBlock

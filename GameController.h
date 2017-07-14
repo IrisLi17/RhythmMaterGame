@@ -49,7 +49,7 @@ private:
     QTimer timer;
     QGraphicsScene &scene;
     Block *curBlock;
-    QList<Block> allBlocks;
+    QList<Block *> allBlocks;
     baseLine *bline;
     bool isPause;
     //double totalScore;
