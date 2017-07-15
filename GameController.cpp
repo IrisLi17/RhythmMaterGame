@@ -10,12 +10,12 @@
 #include <qmessagebox.h>
 #define MAX 10
 
-GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),isPause(false)
+GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),isPause(true),isMusic(false)
 {
     totalScore = 0.0;
     timer.start( 1000/33 );
 	inum = 0;
- 
+	scene.installEventFilter(this);
     //resume();   
 }
 
@@ -30,6 +30,7 @@ GameController::~GameController()
 
 void GameController::level1()
 {
+	isPause = false; 
     curSong = new song(1);//怎样传进来
     Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
     allBlocks.append(temp);
@@ -43,9 +44,12 @@ void GameController::level1()
     scene.addItem(bline);
     scBox = new scoreBox();
     scene.addItem(scBox);
-    scene.installEventFilter(this);
+    
+	player = new QMediaPlayer;
+	player->setMedia(QUrl::fromLocalFile(QString("little_star.mp3")));
+	player->setVolume(30);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
-    isPause = false;    
+       
 }
 
 void GameController::resume()
@@ -66,19 +70,40 @@ void GameController::gameover()
 {
     disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
 	//delete bline;
-	if (QMessageBox::Yes == QMessageBox::information(NULL,
-                            tr("Game Over"), tr("New game?"),
-                            QMessageBox::Yes | QMessageBox::No,
-                            QMessageBox::Yes)) 
+	//if (QMessageBox::Yes == QMessageBox::information(NULL,
+    //                        tr("Game Over"), tr("New game?"),
+    //                        QMessageBox::Yes | QMessageBox::No,
+    //                        QMessageBox::Yes)) 
+	//{
+	totalScore = 0.0;
+	inum = 0;
+	if (!allBlocks.isEmpty())
 	{
-		totalScore = 0.0;
-        //connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
-        scene.clear();
-
-		
+		foreach(Block* w,allBlocks)  
+		{  
+			if(w)  
+			{  
+				allBlocks.removeOne(w);  
+				delete w;  
+				w=NULL;  
+			}
+		} 
 	}
-	else
-		exit(0);
+	delete curSong;
+	delete bline;
+	delete scBox;
+	delete player;
+	curBlock = NULL; 	
+	curSong = NULL;
+    bline = NULL;
+	scBox = NULL;
+	player = NULL;
+	//connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
+    scene.clear();
+	isPause = true;
+	//}
+	//else
+	//	exit(0);
 }
 
 void GameController::judgeCh1()
@@ -135,21 +160,32 @@ void GameController::handleKeyDown(QKeyEvent *event)
 		case Qt::Key_2: judgeCh2();break;
 		case Qt::Key_3: judgeCh3();break;
 		case Qt::Key_4: judgeCh4();break;
-            case Qt::Key_Space: pause();break;
+        case Qt::Key_Space: pause();break;
+		default: gameover();break;
         }
     else resume();//press any key to continue
 }
 
 void GameController::handleKeyUp()
 {
-assert: curBlock->getYpos()< bline->getYpos();
-	curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
-    totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
-    scBox->setScore(totalScore);
+//assert: curBlock->getYpos()< bline->getYpos();
+	if(!isPause)
+	{
+	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
+        totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
+        scBox->setScore(totalScore);
+	}
 }
 void GameController::redirect()
 {
-    if(allBlocks.last()->getYpos()>= -300)
+	//if(inum == 0&&(curBlock->getYpos()+curBlock->getLength()) == 0.0)
+	if(inum == 0&&(player->state()!=QMediaPlayer::PlayingState))
+	{
+		player->play();
+		isMusic = true;
+	}
+	
+    if(allBlocks.last()->getYpos()>= -300 && inum<curSong->size()-1)
     {
         inum+=1;
 		if(inum<curSong->size())
@@ -162,14 +198,15 @@ void GameController::redirect()
 	if(curBlock->getYpos()>0)
 	{
 		scene.removeItem(curBlock);
-		
-		delete allBlocks.takeFirst();
-		
-		if(allBlocks.isEmpty()){
-			gameover();
-			return;
-		}
-		curBlock = allBlocks.first();
+		Block *w = allBlocks.takeFirst();
+		delete w;
+		w = NULL;
+		//if(allBlocks.isEmpty()){
+		//	gameover();
+			//return;
+		//}
+		if(!allBlocks.isEmpty())
+		    curBlock = allBlocks.first();
 	}
 }
 //move all the blocks and redirect curBlock
@@ -205,6 +242,12 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
         //blockDrop();
         return true;
     }
+	else if(allBlocks.isEmpty()&&(!isPause))
+	{
+		gameover();
+		return true;
+	}
+
     else 
     {
         //blockDrop();
@@ -221,3 +264,18 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
 //{
 //    handleKeyUp();
 //}
+//可能应该写scene的advance
+void GameController::advance(int step)
+{
+	if(!step)
+		return;
+	else if(!allBlocks.size())
+		gameover();
+	else
+	{
+		foreach (QGraphicsItem* var,scene.items())
+		{
+			var->advance(1);
+		}
+	}
+}

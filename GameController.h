@@ -4,6 +4,7 @@
 #include <qtimer.h>
 #include <qgraphicsscene.h>
 #include <vector>
+#include <QtMultimedia\qmediaplayer.h>
 
 //vChannels.assign(clist,clist + sizeof(clist)/sizeof(int));
 //vLengths.assign(lenlist,lenlist +sizeof(lenlist)/sizeof(double));
@@ -23,6 +24,7 @@ public:
     ~GameController();
     void redirect();
 	double totalScore;
+	QList<Block *> allBlocks;
 	//void blockEnterline();
     //void blockExitline();
 
@@ -34,10 +36,11 @@ public slots:
     void pause();
     void resume();
     void gameover();
+	void advance(int);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
-
+	
 private:
     void handleKeyDown(QKeyEvent *event);
     void handleKeyUp();
@@ -53,13 +56,15 @@ private:
 	double vYpos[10];
     int inum;//song中的块进行到哪一个了
     QTimer timer;
+	QMediaPlayer *player;
     QGraphicsScene &scene;
     Block *curBlock;
-    QList<Block *> allBlocks;
+    
     baseLine *bline;
     scoreBox *scBox;
     song *curSong;
     bool isPause;
+	bool isMusic;
     //double totalScore;
 };
 #endif

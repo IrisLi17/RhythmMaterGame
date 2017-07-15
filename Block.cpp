@@ -112,6 +112,8 @@ void Block::advance(int step)
 {
     if(!step)
         return;
+	else if(gctrl.allBlocks.isEmpty())
+		return;
     else
     {
         move();
