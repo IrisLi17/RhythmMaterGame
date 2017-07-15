@@ -12,57 +12,11 @@
 
 GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),isPause(false)
 {
-//	vChannels[0] = 0;
-//	vChannels[1] = 1;
-//	vChannels[2] = 2;
-//	vChannels[3] = 3;
-//	vChannels[4] = 2;
-//	vChannels[5] = 1;
-//	vChannels[6] = 0;
-//	vChannels[7] = 1;
-//	vChannels[8] = 2;
-//	vChannels[9] = 3;
-//	vLengths[0] = 20.0;
-//	vLengths[1] = 10.0;
-//	vLengths[2] = 5.0;
-//	vLengths[3] = 15.0;
-//	vLengths[4] = 10.0;
-//	vLengths[5] = 20.0;
-//	vLengths[6] = 5.0;
-//	vLengths[7] = 10.0;
-//	vLengths[8] = 5.0;
-//	vLengths[9] = 8.0;
-//	vYpos[0] = -200.0;
-//	vYpos[1] = -210.0;
-//	vYpos[2] = -215.0;
-//	vYpos[3] = -230.0;
-//	vYpos[4] = -240.0;
-//	vYpos[5] = -260.0;
-//	vYpos[6] = -265.0;
-//	vYpos[7] = -275.0;
-//	vYpos[8] = -280.0;
-//	vYpos[9] = -288.0;
-    inum = 0;
     totalScore = 0.0;
-    timer.start( 100 );
-    curSong = new song(1);
-    //需要改成如果allBlocks里面最后一个位置太靠下就加一个块到allBlocks里面
-	//for(int loop = 0; loop<curSong->size(); loop++)
-    //{
-		Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-200-curSong->getLengths()[0],*this);
-		allBlocks.append(temp);
-		scene.addItem(temp);
-		//if(loop ==0)
-			curBlock = temp;
-	//}
-	//curBlock = &(allBlocks[0]);
-    bline = new baseLine();      
-	//scene.addItem(curBlock);
-    scene.addItem(bline);
-    scBox = new scoreBox();
-    scene.addItem(scBox);
-    scene.installEventFilter(this);
-    resume();   
+    timer.start( 1000/33 );
+	inum = 0;
+ 
+    //resume();   
 }
 
 GameController::~GameController()
@@ -73,6 +27,27 @@ GameController::~GameController()
 //{
 //	qDebug()<<"test";
 //}
+
+void GameController::level1()
+{
+    curSong = new song(1);//怎样传进来
+    Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
+    allBlocks.append(temp);
+    scene.addItem(temp);
+     //if(loop ==0)
+    curBlock = temp;
+    //}
+    //curBlock = &(allBlocks[0]);
+    bline = new baseLine();      
+    //scene.addItem(curBlock);
+    scene.addItem(bline);
+    scBox = new scoreBox();
+    scene.addItem(scBox);
+    scene.installEventFilter(this);
+    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
+    isPause = false;    
+}
+
 void GameController::resume()
 {
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
@@ -97,13 +72,10 @@ void GameController::gameover()
                             QMessageBox::Yes)) 
 	{
 		totalScore = 0.0;
-        connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
+        //connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
         scene.clear();
 
-        curBlock = new Block(2,200.0,-300.0,*this);
-		bline = new baseLine();
-        scene.addItem(curBlock);
-		scene.addItem(bline);
+		
 	}
 	else
 		exit(0);
@@ -159,10 +131,10 @@ void GameController::handleKeyDown(QKeyEvent *event)
     if(!isPause)
         switch(event->key())
         {
-		case Qt::Key_A: judgeCh1();break;
-		case Qt::Key_S: judgeCh2();break;
-		case Qt::Key_D: judgeCh3();break;
-		case Qt::Key_F: judgeCh4();break;
+		case Qt::Key_1: judgeCh1();break;
+		case Qt::Key_2: judgeCh2();break;
+		case Qt::Key_3: judgeCh3();break;
+		case Qt::Key_4: judgeCh4();break;
             case Qt::Key_Space: pause();break;
         }
     else resume();//press any key to continue
@@ -177,12 +149,15 @@ assert: curBlock->getYpos()< bline->getYpos();
 }
 void GameController::redirect()
 {
-    if(allBlocks.last()->getYpos()>= -200)
+    if(allBlocks.last()->getYpos()>= -300)
     {
         inum+=1;
-        Block *temp = new Block(curSong->getChannels()[inum],curSong->getLengths()[inum],-200-curSong->getLengths()[inum],*this);
-        allBlocks.append(temp);
-        scene.addItem(temp);
+		if(inum<curSong->size())
+		{
+			Block *temp = new Block(curSong->getChannels()[inum],curSong->getLengths()[inum],-300-curSong->getLengths()[inum],*this);
+			allBlocks.append(temp);
+			scene.addItem(temp);
+		}
     }
 	if(curBlock->getYpos()>0)
 	{

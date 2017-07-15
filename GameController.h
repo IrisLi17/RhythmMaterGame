@@ -27,6 +27,10 @@ public:
     //void blockExitline();
 
 public slots:
+    //void start();
+	void level1();
+	//void level2();
+	//void level3();
     void pause();
     void resume();
     void gameover();

@@ -27,7 +27,10 @@ private:
 	void initSceneBackground();
     void createActions();
     void createMenus();
-	QAction *newGameAction;
+	//QAction *newGameAction;
+    QAction *level1Action;
+    QAction *level2Action;
+    QAction *level3Action;
 	QAction *exitAction;
 	QAction *pauseAction;
 	QAction *resumeAction;

@@ -4,11 +4,11 @@
 #include "GameController.h"
 #include <qmessagebox.h>
 
-//need to write GameController
+
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent),scene(new QGraphicsScene(this)),view(new QGraphicsView(scene,this)),game(new GameController(*scene, this))
 {
     setCentralWidget(view);
-	setFixedSize(200,200);
+	setFixedSize(200,400);
 	setVisible(false);
 
     createActions();
@@ -32,7 +32,7 @@ void MainWindow::adjustSize()
 
 void MainWindow::initScene()
 {
-    scene->setSceneRect(0, -1000, 200, 1100);
+    scene->setSceneRect(0, -300, 200, 400);
 }
 
 void MainWindow::initSceneBackground()
@@ -47,11 +47,23 @@ void MainWindow::initSceneBackground()
 
 void MainWindow::createActions()
 {
-    newGameAction = new QAction(tr("&New Game"), this);
-    newGameAction->setShortcuts(QKeySequence::New);
-    newGameAction->setStatusTip(tr("Start a new game"));
+    //newGameAction = new QAction(tr("&New Game"), this);
+    //newGameAction->setShortcuts(QKeySequence::New);
+    //newGameAction->setStatusTip(tr("Start a new game"));
     //connect(newGameAction, &QAction::triggered, this, &MainWindow::newGame);
-	connect(newGameAction,&QAction::triggered,game,&GameController::gameover);
+	//connect(newGameAction,&QAction::triggered,game,&GameController::start);
+
+    level1Action = new QAction(tr("&level 1"),this);
+    level1Action->setWhatsThis(tr("&?"));
+	connect(level1Action,&QAction::triggered,game,&GameController::level1);
+
+    level2Action = new QAction(tr("&level 2"),this);
+    level2Action->setWhatsThis(tr("&??"));
+    //connect(level2Action,SIGNAL(QAction::triggered),game,SLOT(GameController::level2));
+
+    level3Action = new QAction(tr("&level 3"),this);
+    level3Action->setWhatsThis(tr("&???"));
+    //connect(level3Action,SIGNAL(QAction::triggered),game,SLOT(GameController::level3));
 
     exitAction = new QAction(tr("&Exit"), this);
     exitAction->setShortcut(tr("Ctrl+Q"));
@@ -82,9 +94,16 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
+    QMenu *newGame = menuBar()->addMenu(tr("&New Game"));
+    newGame->addAction(level1Action);
+    newGame->addSeparator();
+    newGame->addAction(level2Action);
+    newGame->addSeparator();
+    newGame->addAction(level3Action);
+
     QMenu *options = menuBar()->addMenu(tr("&Options"));
-    options->addAction(newGameAction);
-    options->addSeparator();
+    //options->addAction(newGameAction);
+    //options->addSeparator();
     options->addAction(pauseAction);
     options->addAction(resumeAction);
     options->addSeparator();
