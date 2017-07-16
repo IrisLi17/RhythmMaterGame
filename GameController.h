@@ -27,7 +27,7 @@ public:
 	QList<Block *> allBlocks;
 	//void blockEnterline();
     //void blockExitline();
-
+	
 public slots:
     //void start();
 	void level1();
@@ -37,6 +37,7 @@ public slots:
     void resume();
     void gameover();
 	void advance(int);
+	void animationStart(int);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

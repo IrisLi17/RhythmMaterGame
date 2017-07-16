@@ -3,6 +3,7 @@
 #include "baseLine.h"
 #include "ScoreBox.h"
 #include "Song.h"
+#include "Animation.h"
 #include <QKeyEvent>
 #include <fstream>
 #include <QDebug>
@@ -101,7 +102,7 @@ void GameController::gameover()
     //scene.clear();
 	isPause = true;
 	disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
-    QMessageBox message(QMessageBox::NoIcon, "Game Over", "Your score:"+QString::number(totalScore)+"\nExit the game?", QMessageBox::Yes | QMessageBox::No, NULL); 
+    QMessageBox message(QMessageBox::NoIcon, "Game Over", "Your score: "+QString::number(totalScore)+"\nExit the game?", QMessageBox::Yes | QMessageBox::No, NULL); 
     if(message.exec() == QMessageBox::Yes) 
     { 
         exit(1);
@@ -179,10 +180,32 @@ void GameController::handleKeyUp()
 	if(!isPause&&alive)
 	{
 	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
+		double add = curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
+		if(add<50)
+		    //QTimer::singleShot(0,this,SLOT(animationStart(1)));
+				animationStart(1);
+		else if(add<75)
+			//QTimer::singleShot(0,this,SLOT(animationStart(2)));
+			animationStart(2);
+		else
+			//QTimer::singleShot(0,this,SLOT(animationStart(3)));
+			animationStart(3);
         totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
+        //加信号和槽做动画
         scBox->setScore(totalScore);
 	}
 }
+
+void GameController::animationStart(int i)
+{
+	animationMark* mymark = new animationMark(i);
+	scene.addItem(mymark);
+	mymark->display();
+	scene.removeItem(mymark);
+	delete mymark;
+	mymark = NULL;
+}
+
 void GameController::redirect()
 {
 	//if(inum == 0&&(curBlock->getYpos()+curBlock->getLength()) == 0.0)
