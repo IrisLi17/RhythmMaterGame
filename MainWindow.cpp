@@ -8,7 +8,7 @@
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent),scene(new QGraphicsScene(this)),view(new QGraphicsView(scene,this)),game(new GameController(*scene, this))
 {
     setCentralWidget(view);
-	setFixedSize(200,400);
+	resize(200,400);
 	setVisible(false);
 
     createActions();
@@ -37,12 +37,14 @@ void MainWindow::initScene()
 
 void MainWindow::initSceneBackground()
 {
-    QPixmap bg(200, 200);
-    QPainter p(&bg);
-    p.setBrush(QBrush(Qt::gray));
-    p.drawRect(0, 0, 200, 200);
-
-    view->setBackgroundBrush(QBrush(bg));
+	this->setObjectName("window");
+	view->setStyleSheet("border-image:url(milkyway.jpg);");
+ //QPixmap pixmap("milkyway.jpg");//设定图片
+ //QPalette palette;//创建一个调色板对象
+ //palette.setBrush(view->backgroundRole(),QBrush(pixmap));//用调色板的画笔把映射到pixmap上的图片画到frame.backgroundRole()这个背景上
+ //view->setPalette(palette);//设置窗口调色板为palette，窗口和画笔相关联
+ //view->setAutoFillBackground(true);//设置窗体自动填充背景
+ //view->show();
 }
 
 void MainWindow::createActions()
@@ -100,6 +102,7 @@ void MainWindow::createMenus()
     newGame->addAction(level2Action);
     newGame->addSeparator();
     newGame->addAction(level3Action);
+	//newGame->setAutoFillBackground(true);
 
     QMenu *options = menuBar()->addMenu(tr("&Options"));
     //options->addAction(newGameAction);

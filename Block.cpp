@@ -40,12 +40,19 @@ QPainterPath Block::shape() const
 	return path;
 }
 
+//void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+//{
+//	std::clog<<"ready to paint block!"<<std::endl;
+//    painter->save();
+//    painter->fillPath(shape(), QBrush(QColor(205,80,186)));
+//    painter->restore();    
+//}
+
 void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-	std::clog<<"ready to paint block!"<<std::endl;
-    painter->save();
-    painter->fillPath(shape(), QBrush(QColor(205,80,186)));
-    painter->restore();    
+	painter->save();
+	painter->drawPixmap(QRectF(-25.0,-dlength/2,50.0,dlength),QPixmap(QString("block.png")),QRectF(0,0,128,211));
+	painter->restore();
 }
 
 void Block::move()
