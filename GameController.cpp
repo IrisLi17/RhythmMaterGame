@@ -13,7 +13,7 @@
 GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),isPause(true),isMusic(false)
 {
     totalScore = 0.0;
-    timer.start( 1000/33 );
+    //timer.start( 1000/33 );
 	inum = 0;
 	scene.installEventFilter(this);
     //resume();   
@@ -48,6 +48,7 @@ void GameController::level1()
 	player = new QMediaPlayer;
 	player->setMedia(QUrl::fromLocalFile(QString("little_star.mp3")));
 	player->setVolume(30);
+	timer.start(1000/33);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
        
 }
@@ -68,7 +69,7 @@ void GameController::pause()
 
 void GameController::gameover()
 {
-    disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
+    
 	//delete bline;
 	//if (QMessageBox::Yes == QMessageBox::information(NULL,
     //                        tr("Game Over"), tr("New game?"),
@@ -77,7 +78,7 @@ void GameController::gameover()
 	//{
 	totalScore = 0.0;
 	inum = 0;
-	if (!allBlocks.isEmpty())
+	if (!(allBlocks.isEmpty()))
 	{
 		foreach(Block* w,allBlocks)  
 		{  
@@ -90,7 +91,9 @@ void GameController::gameover()
 		} 
 	}
 	delete curSong;
+	//scene.removeItem(bline);
 	delete bline;
+	//scene.removeItem(scBox);
 	delete scBox;
 	delete player;
 	curBlock = NULL; 	
@@ -99,8 +102,9 @@ void GameController::gameover()
 	scBox = NULL;
 	player = NULL;
 	//connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
-    scene.clear();
+    //scene.clear();
 	isPause = true;
+	disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
 	//}
 	//else
 	//	exit(0);
@@ -207,6 +211,11 @@ void GameController::redirect()
 		//}
 		if(!allBlocks.isEmpty())
 		    curBlock = allBlocks.first();
+		else 
+		{
+			curBlock = NULL;
+			//gameover();
+		}
 	}
 }
 //move all the blocks and redirect curBlock
@@ -245,7 +254,7 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
 	else if(allBlocks.isEmpty()&&(!isPause))
 	{
 		gameover();
-		return true;
+		return false;
 	}
 
     else 
