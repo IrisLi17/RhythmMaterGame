@@ -63,6 +63,7 @@ private:
     baseLine *bline;
     scoreBox *scBox;
     song *curSong;
+    bool alive;
     bool isPause;
 	bool isMusic;
     //double totalScore;

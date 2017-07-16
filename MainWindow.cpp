@@ -8,7 +8,7 @@
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent),scene(new QGraphicsScene(this)),view(new QGraphicsView(scene,this)),game(new GameController(*scene, this))
 {
     setCentralWidget(view);
-	resize(200,400);
+	resize(600,800);
 	setVisible(false);
 
     createActions();

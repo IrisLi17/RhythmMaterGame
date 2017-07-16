@@ -10,7 +10,7 @@
 #include <qmessagebox.h>
 #define MAX 10
 
-GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),isPause(true),isMusic(false)
+GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isMusic(false)
 {
     totalScore = 0.0;
     //timer.start( 1000/33 );
@@ -30,6 +30,7 @@ GameController::~GameController()
 
 void GameController::level1()
 {
+    alive = true;
 	isPause = false; 
     curSong = new song(1);//怎样传进来
     Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
@@ -70,13 +71,8 @@ void GameController::pause()
 void GameController::gameover()
 {
     
-	//delete bline;
-	//if (QMessageBox::Yes == QMessageBox::information(NULL,
-    //                        tr("Game Over"), tr("New game?"),
-    //                        QMessageBox::Yes | QMessageBox::No,
-    //                        QMessageBox::Yes)) 
-	//{
-	totalScore = 0.0;
+    alive = false;
+	//totalScore = 0.0;
 	inum = 0;
 	if (!(allBlocks.isEmpty()))
 	{
@@ -105,6 +101,12 @@ void GameController::gameover()
     //scene.clear();
 	isPause = true;
 	disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
+    QMessageBox message(QMessageBox::NoIcon, "Game Over", "Your score:"+QString::number(totalScore)+"\nExit the game?", QMessageBox::Yes | QMessageBox::No, NULL); 
+    if(message.exec() == QMessageBox::Yes) 
+    { 
+        exit(1);
+    }
+	totalScore = 0.0;
 	//}
 	//else
 	//	exit(0);
@@ -157,7 +159,7 @@ void GameController::judgeCh4()
 
 void GameController::handleKeyDown(QKeyEvent *event)
 {
-    if(!isPause)
+    if(!isPause&&alive)
         switch(event->key())
         {
 		case Qt::Key_1: judgeCh1();break;
@@ -167,13 +169,14 @@ void GameController::handleKeyDown(QKeyEvent *event)
         case Qt::Key_Space: pause();break;
 		default: gameover();break;
         }
-    else resume();//press any key to continue
+    else if(alive) 
+        resume();//press any key to continue
 }
 
 void GameController::handleKeyUp()
 {
 //assert: curBlock->getYpos()< bline->getYpos();
-	if(!isPause)
+	if(!isPause&&alive)
 	{
 	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
         totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
@@ -251,7 +254,7 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
         //blockDrop();
         return true;
     }
-	else if(allBlocks.isEmpty()&&(!isPause))
+	else if(allBlocks.isEmpty()&&alive&&(!isPause))
 	{
 		gameover();
 		return false;
