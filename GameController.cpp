@@ -11,7 +11,7 @@
 #include <qmessagebox.h>
 #define MAX 10
 
-GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isMusic(false)
+GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isMusic(false),isPress(false)
 {
     totalScore = 0.0;
     //timer.start( 1000/33 );
@@ -31,6 +31,8 @@ GameController::~GameController()
 
 void GameController::level1()
 {
+	if(alive)
+		gameover();
     alive = true;
 	isPause = false; 
     curSong = new song(1);//怎样传进来
@@ -50,7 +52,9 @@ void GameController::level1()
 	player = new QMediaPlayer;
 	player->setMedia(QUrl::fromLocalFile(QString("little_star.mp3")));
 	player->setVolume(30);
-	timer.start(1000/33);
+	timer.start(1000/20);
+	atimer = new QTimeLine(1000);
+    atimer->setFrameRange(0, 100);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
        
 }
@@ -113,46 +117,47 @@ void GameController::gameover()
 	//	exit(0);
 }
 
-void GameController::judgeCh1()
+void GameController::judgeCh1(bool repeat)
 {
     if(curBlock->getCh() != 0 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
         
 		gameover();
-    else
+    else if(!repeat&&(!isPress))
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
+		isPress = true;
     }
 }
 
-void GameController::judgeCh2()
+void GameController::judgeCh2(bool repeat)
 {
     if(curBlock->getCh() != 1 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
         gameover();
-    else
+    else if(!repeat)
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
-void GameController::judgeCh3()
+void GameController::judgeCh3(bool repeat)
 {
 	if(curBlock->getCh() != 2 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
-    else
+    else if(!repeat)
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
 }
 
-void GameController::judgeCh4()
+void GameController::judgeCh4(bool repeat)
 {
     if(curBlock->getCh() != 3 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
-    else
+    else if(!repeat)
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
     }
@@ -163,10 +168,10 @@ void GameController::handleKeyDown(QKeyEvent *event)
     if(!isPause&&alive)
         switch(event->key())
         {
-		case Qt::Key_1: judgeCh1();break;
-		case Qt::Key_2: judgeCh2();break;
-		case Qt::Key_3: judgeCh3();break;
-		case Qt::Key_4: judgeCh4();break;
+		case Qt::Key_1: judgeCh1(event->isAutoRepeat());break;
+		case Qt::Key_2: judgeCh2(event->isAutoRepeat());break;
+		case Qt::Key_3: judgeCh3(event->isAutoRepeat());break;
+		case Qt::Key_4: judgeCh4(event->isAutoRepeat());break;
         case Qt::Key_Space: pause();break;
 		default: gameover();break;
         }
@@ -174,17 +179,17 @@ void GameController::handleKeyDown(QKeyEvent *event)
         resume();//press any key to continue
 }
 
-void GameController::handleKeyUp()
+void GameController::handleKeyUp(QKeyEvent *event)
 {
 //assert: curBlock->getYpos()< bline->getYpos();
 	if(!isPause&&alive)
 	{
 	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
 		double add = curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
-		if(add<50)
+		if(add<30)
 		    //QTimer::singleShot(0,this,SLOT(animationStart(1)));
-				animationStart(1);
-		else if(add<75)
+		    animationStart(1);
+		else if(add<70)
 			//QTimer::singleShot(0,this,SLOT(animationStart(2)));
 			animationStart(2);
 		else
@@ -194,16 +199,25 @@ void GameController::handleKeyUp()
         //加信号和槽做动画
         scBox->setScore(totalScore);
 	}
+	
 }
 
 void GameController::animationStart(int i)
 {
 	animationMark* mymark = new animationMark(i);
+    animation = new QGraphicsItemAnimation;
+    animation->setItem(mymark);
+    animation->setTimeLine(atimer);
+
+    for (int i = 0; i < 10; ++i)
+        animation->setPosAt(i / 10.0, QPointF(100, -50*i-150));
+    
+    //animation.setEasingCurve(QEasingCurve::OutBounce);
 	scene.addItem(mymark);
-	mymark->display();
-	scene.removeItem(mymark);
-	delete mymark;
-	mymark = NULL;
+    atimer->start();
+	//scene.removeItem(mymark);
+	//delete mymark;
+	//mymark = NULL;
 }
 
 void GameController::redirect()
@@ -244,36 +258,20 @@ void GameController::redirect()
 		}
 	}
 }
-//move all the blocks and redirect curBlock
-//void GameController::blockDrop()
-//{
-    //for (int loop =0; loop<allBlocks.size(); loop++)
-    //{
-    //    allBlocks[loop].move();
-    //}
-//    if (curBlock->getYpos()>= 200 && inum < 10)
- //   {
-//        inum += 1;
- //       scene.removeItem(curBlock);
- //       curBlock = &Block(vChannels[inum], vLengths[inum], vLengths[inum]);
- //       scene.addItem(curBlock);
-  //  }
- //   else if(inum >= 10)
- //   {
-//        gameover();
-//    }
-//
+
 bool GameController::eventFilter(QObject *object, QEvent *event)
 {
-    if(event->type() == QEvent::KeyPress)
+	if(event->type() == QEvent::KeyPress&&(!((QKeyEvent*)event)->isAutoRepeat()))
     {
         handleKeyDown((QKeyEvent*)event);
+		isPress = true;
         //blockDrop();
         return true;
     }
-    else if(event->type() == QEvent::KeyRelease)
+    else if(event->type() == QEvent::KeyRelease&&(!((QKeyEvent*)event)->isAutoRepeat())&&(isPress))
     {
-        handleKeyUp();
+        handleKeyUp((QKeyEvent*)event);
+		isPress = false;
         //blockDrop();
         return true;
     }

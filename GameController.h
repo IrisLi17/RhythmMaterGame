@@ -5,6 +5,8 @@
 #include <qgraphicsscene.h>
 #include <vector>
 #include <QtMultimedia\qmediaplayer.h>
+#include <qtimeline.h>
+#include <qgraphicsitemanimation.h>
 
 //vChannels.assign(clist,clist + sizeof(clist)/sizeof(int));
 //vLengths.assign(lenlist,lenlist +sizeof(lenlist)/sizeof(double));
@@ -44,19 +46,20 @@ protected:
 	
 private:
     void handleKeyDown(QKeyEvent *event);
-    void handleKeyUp();
+    void handleKeyUp(QKeyEvent*event);
     //void blockDrop();
 	
-    void judgeCh1();
-    void judgeCh2();
-    void judgeCh3();
-    void judgeCh4();
+	void judgeCh1(bool);
+    void judgeCh2(bool);
+    void judgeCh3(bool);
+    void judgeCh4(bool);
 
 	int vChannels[10];
 	double vLengths[10];
 	double vYpos[10];
     int inum;//song中的块进行到哪一个了
     QTimer timer;
+	QTimeLine *atimer;
 	QMediaPlayer *player;
     QGraphicsScene &scene;
     Block *curBlock;
@@ -64,9 +67,11 @@ private:
     baseLine *bline;
     scoreBox *scBox;
     song *curSong;
+	QGraphicsItemAnimation* animation;
     bool alive;
     bool isPause;
 	bool isMusic;
+	bool isPress;
     //double totalScore;
 };
 #endif

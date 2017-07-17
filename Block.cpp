@@ -100,8 +100,8 @@ double Block::calScore(double pEnter, double pExit)
 {
     if (pEnter <= pExit)
         score = 0;
-    else
-        score = (pEnter - pExit)/dlength*100;
+	else
+		score = (pEnter - pExit)/dlength*100;
     return score;
 }
 void Block::levelup(int level)

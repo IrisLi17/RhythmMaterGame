@@ -4,7 +4,7 @@
 
 animationMark::animationMark(int i)
 {
-    setPos(100,-150);
+    setPos(QPointF(100,-150));
     switch(i)
     {
         case 1:
@@ -30,10 +30,21 @@ animationMark::~animationMark()
 {
 
 }
+QPointF animationMark::getPos()
+{
+	return pos;
+}
+
+void animationMark::setPos(QPointF p)
+{
+	pos.setX(p.rx());
+	pos.setY(p.ry());
+}
 
 QRectF animationMark::boundingRect() const
 {
-    return QRectF(-40.0,-15.0,80.0,30.0);
+    //return QRectF(-40.0,-15.0,80.0,30.0);
+	return QRectF(60.0,-165.0,80.0,30.0);
 }
 
 void animationMark::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

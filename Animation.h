@@ -6,14 +6,17 @@
 class animationMark: public QObject, public QGraphicsItem
 {
     Q_OBJECT
-    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(QPointF pos READ getPos WRITE setPos)
 public:
     animationMark(int);
     ~animationMark();
+	QPointF getPos();
+	void setPos(QPointF);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void display();
 private:
+	QPointF pos;
     QPixmap* mark;
 };
 
