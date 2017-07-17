@@ -15,6 +15,7 @@ class Block;
 class baseLine;
 class scoreBox;
 class song;
+class animationMark;
 
 //need to associate song to the game
 class GameController:public QObject
@@ -33,8 +34,8 @@ public:
 public slots:
     //void start();
 	void level1();
-	//void level2();
-	//void level3();
+	void level2();
+	void level3();
     void pause();
     void resume();
     void gameover();
@@ -68,6 +69,8 @@ private:
     scoreBox *scBox;
     song *curSong;
 	QGraphicsItemAnimation* animation;
+	animationMark* mymark;
+
     bool alive;
     bool isPause;
 	bool isMusic;

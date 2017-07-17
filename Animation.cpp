@@ -53,15 +53,3 @@ void animationMark::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
 	painter->drawPixmap(boundingRect(),*mark,mark->rect());
     painter->restore();
 }
-
-void animationMark::display()
-{
-    QPropertyAnimation animation(this, "pos");
-    animation.setDuration(3000);
-    animation.setStartValue(QPointF(100,-150));
-    animation.setEndValue(QPointF(100,-250));
-    
-    animation.setEasingCurve(QEasingCurve::OutBounce);
-    
-    animation.start();    
-}

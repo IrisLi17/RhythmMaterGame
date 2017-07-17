@@ -5,7 +5,7 @@ class GameController;
 Block::Block(int ich, double dl, double dyp, GameController &gctrl):ichannel(ich),dlength(dl),dypos(dyp),gctrl(gctrl)
 {
 	setPos(ich*50.0+25.0,dyp+dl/2);
-    dspeed = 2.0;
+    dspeed = 3.0;
     enterPos = 0.0;
     exitPos = dl;
 }
@@ -108,10 +108,10 @@ void Block::levelup(int level)
 {
     switch(level)
     {
-        case 1: dspeed = 2.5; break;
-        case 2: dspeed = 3.0; break;
-        case 3: dspeed = 3.5; break;
-        default: dspeed = 2.0;
+        case 1: dspeed = 3.5; break;
+        case 2: dspeed =4.0; break;
+        case 3: dspeed = 5.0; break;
+        default: dspeed = 3.0;
     }
 }
 

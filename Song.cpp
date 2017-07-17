@@ -25,6 +25,46 @@ song::song(int order)
                       
             break;
         }
+        case 2:
+        {
+            std::ifstream infile1("channel2.txt",std::ios::in);
+            int temp;
+            while(!infile1.eof())
+            {
+                infile1>>temp;
+				vChannels.push_back(temp);
+            }
+            infile1.close();
+            std::ifstream infile2("length2.txt",std::ios::in);
+            while(!infile2.eof())
+            {
+                infile2>>temp;
+				vLengths.push_back(temp);
+            }
+            infile2.close();
+                      
+            break;
+        }
+        case 3:
+        {
+            std::ifstream infile1("channel3.txt",std::ios::in);
+            int temp;
+            while(!infile1.eof())
+            {
+                infile1>>temp;
+				vChannels.push_back(temp);
+            }
+            infile1.close();
+            std::ifstream infile2("length3.txt",std::ios::in);
+            while(!infile2.eof())
+            {
+                infile2>>temp;
+				vLengths.push_back(temp);
+            }
+            infile2.close();
+                      
+            break;
+        }
         default:break;
 
     }

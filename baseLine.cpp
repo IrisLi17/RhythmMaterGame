@@ -27,7 +27,7 @@ void baseLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 {
 	std::clog<<"ready to paint baseline!"<<std::endl;
     painter->save();
-    painter->fillPath(shape(),QBrush(QColor(0,0,255)));
+    painter->fillPath(shape(),QBrush(QColor(255,255,255)));
     painter->restore();
 }
 

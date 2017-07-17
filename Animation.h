@@ -3,9 +3,9 @@
 
 #include <qgraphicsitem.h>
 
-class animationMark: public QObject, public QGraphicsItem
+class animationMark: public QGraphicsItem
 {
-    Q_OBJECT
+    //Q_OBJECT
     Q_PROPERTY(QPointF pos READ getPos WRITE setPos)
 public:
     animationMark(int);
@@ -14,7 +14,7 @@ public:
 	void setPos(QPointF);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    void display();
+    //void display();
 private:
 	QPointF pos;
     QPixmap* mark;

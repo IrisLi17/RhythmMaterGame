@@ -9,7 +9,6 @@
 #include <QDebug>
 #include <assert.h>
 #include <qmessagebox.h>
-#define MAX 10
 
 GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isMusic(false),isPress(false)
 {
@@ -35,28 +34,62 @@ void GameController::level1()
 		gameover();
     alive = true;
 	isPause = false; 
-    curSong = new song(1);//怎样传进来
+    curSong = new song(1);
     Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
     allBlocks.append(temp);
     scene.addItem(temp);
-     //if(loop ==0)
     curBlock = temp;
-    //}
-    //curBlock = &(allBlocks[0]);
     bline = new baseLine();      
-    //scene.addItem(curBlock);
     scene.addItem(bline);
     scBox = new scoreBox();
-    scene.addItem(scBox);
-    
+    scene.addItem(scBox);    
 	player = new QMediaPlayer;
-	player->setMedia(QUrl::fromLocalFile(QString("little_star.mp3")));
+	player->setMedia(QUrl::fromLocalFile(QString("1little_star.mp3")));
 	player->setVolume(30);
 	timer.start(1000/20);
-	atimer = new QTimeLine(1000);
-    atimer->setFrameRange(0, 100);
-    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
-       
+    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
+}
+void GameController::level2()
+{
+	if(alive)
+		gameover();
+    alive = true;
+	isPause = false; 
+    curSong = new song(2);
+    Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
+    allBlocks.append(temp);
+    scene.addItem(temp);
+    curBlock = temp;
+    bline = new baseLine();      
+    scene.addItem(bline);
+    scBox = new scoreBox();
+    scene.addItem(scBox);    
+	player = new QMediaPlayer;
+	player->setMedia(QUrl::fromLocalFile(QString("2thu.mp3")));
+	player->setVolume(30);
+	timer.start(1000/20);
+    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
+}
+void GameController::level3()
+{
+	if(alive)
+		gameover();
+    alive = true;
+	isPause = false; 
+    curSong = new song(3);
+    Block *temp = new Block(curSong->getChannels()[0],curSong->getLengths()[0],-300-curSong->getLengths()[0],*this);
+    allBlocks.append(temp);
+    scene.addItem(temp);
+    curBlock = temp;
+    bline = new baseLine();      
+    scene.addItem(bline);
+    scBox = new scoreBox();
+    scene.addItem(scBox);    
+	player = new QMediaPlayer;
+	player->setMedia(QUrl::fromLocalFile(QString("3bee.mp3")));
+	player->setVolume(30);
+	timer.start(1000/20);
+    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
 }
 
 void GameController::resume()
@@ -166,6 +199,7 @@ void GameController::judgeCh4(bool repeat)
 void GameController::handleKeyDown(QKeyEvent *event)
 {
     if(!isPause&&alive)
+	{
         switch(event->key())
         {
 		case Qt::Key_1: judgeCh1(event->isAutoRepeat());break;
@@ -175,14 +209,16 @@ void GameController::handleKeyDown(QKeyEvent *event)
         case Qt::Key_Space: pause();break;
 		default: gameover();break;
         }
-    else if(alive) 
+
+	}
+	else if(alive&&event->key()==Qt::Key_Space) 
         resume();//press any key to continue
 }
 
 void GameController::handleKeyUp(QKeyEvent *event)
 {
 //assert: curBlock->getYpos()< bline->getYpos();
-	if(!isPause&&alive)
+	if(!isPause&&alive&&event->key()!=Qt::Key_Space)
 	{
 	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
 		double add = curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
@@ -199,18 +235,23 @@ void GameController::handleKeyUp(QKeyEvent *event)
         //加信号和槽做动画
         scBox->setScore(totalScore);
 	}
+
 	
 }
 
 void GameController::animationStart(int i)
 {
-	animationMark* mymark = new animationMark(i);
+	//可能要先移除mymark
+	if(scene.items().indexOf(mymark)!=-1)
+		scene.removeItem(mymark);
+	atimer = new QTimeLine(1000);
+    atimer->setFrameRange(0, 25);
+	mymark = new animationMark(i);
     animation = new QGraphicsItemAnimation;
     animation->setItem(mymark);
     animation->setTimeLine(atimer);
-
-    for (int i = 0; i < 10; ++i)
-        animation->setPosAt(i / 10.0, QPointF(100, -50*i-150));
+	for(int i=0;i<25;i++)
+		animation->setPosAt(i,QPointF(100,-150));
     
     //animation.setEasingCurve(QEasingCurve::OutBounce);
 	scene.addItem(mymark);
@@ -255,6 +296,12 @@ void GameController::redirect()
 		{
 			curBlock = NULL;
 			//gameover();
+		}
+		foreach(Block* w,allBlocks)
+		{
+			if(totalScore>1000) w->levelup(3);
+			else if(totalScore>500) w->levelup(2);
+			else if(totalScore>200) w->levelup(1);
 		}
 	}
 }
