@@ -308,7 +308,8 @@ void GameController::redirect()
 
 bool GameController::eventFilter(QObject *object, QEvent *event)
 {
-	if(event->type() == QEvent::KeyPress&&(!((QKeyEvent*)event)->isAutoRepeat()))
+	//if(event->type() == QEvent::KeyPress&&(!((QKeyEvent*)event)->isAutoRepeat()))
+	if(event->type() == QEvent::KeyPress)
     {
         handleKeyDown((QKeyEvent*)event);
 		isPress = true;
@@ -316,8 +317,9 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
         return true;
     }
     else if(event->type() == QEvent::KeyRelease&&(!((QKeyEvent*)event)->isAutoRepeat())&&(isPress))
-    {
-        handleKeyUp((QKeyEvent*)event);
+    //else if(event->type() == QEvent::KeyRelease&&(isPress))
+	{
+		handleKeyUp((QKeyEvent*)event);
 		isPress = false;
         //blockDrop();
         return true;
