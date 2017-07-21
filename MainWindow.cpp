@@ -38,7 +38,7 @@ void MainWindow::initScene()
 void MainWindow::initSceneBackground()
 {
 	this->setObjectName("window");
-	view->setStyleSheet("border-image:url(milkyway.jpg);");
+	view->setStyleSheet("border-image:url(milkyway1.png);");
  //QPixmap pixmap("milkyway.jpg");//设定图片
  //QPalette palette;//创建一个调色板对象
  //palette.setBrush(view->backgroundRole(),QBrush(pixmap));//用调色板的画笔把映射到pixmap上的图片画到frame.backgroundRole()这个背景上
