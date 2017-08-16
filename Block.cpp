@@ -30,15 +30,15 @@ QRectF Block::boundingRect() const
     return QRectF(-26.0,-dlength/2-1,52.0,dlength+2);
 }
 
-QPainterPath Block::shape() const
-{
-    QPainterPath path;
+//QPainterPath Block::shape() const
+//{
+//    QPainterPath path;
 	//QPointF topleftTemp = mapFromScene(QPointF(myblock.topLeft()));
 	//QPointF bottomrightTemp = mapFromScene(QPointF(myblock.bottomRight()));
     //path.addRect(topleftTemp.rx(),topleftTemp.ry(),bottomrightTemp.rx()-topleftTemp.rx(),bottomrightTemp.ry()-topleftTemp.ry());
-	path.addRect(-25.0,-dlength/2,50.0,dlength);
-	return path;
-}
+//	path.addRect(-25.0,-dlength/2,50.0,dlength);
+//	return path;
+//}
 
 //void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 //{

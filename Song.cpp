@@ -72,14 +72,7 @@ song::song(int order)
 }
 
 song::~song(){}
-//int song::getCurChannel(int inum)
-//{
-//	return vChannels[inum];
-//}
-//double song::getCurLength(int inum)
-//{
-//	return vLengths[inum];
-//}
+
 
 std::vector<int>& song::getChannels()
 {

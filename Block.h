@@ -12,7 +12,7 @@ public:
 	Block(const Block&);
 	~Block();
     QRectF boundingRect() const;
-    QPainterPath shape() const;
+    //QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void move();
     int getCh() const;

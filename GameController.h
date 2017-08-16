@@ -55,9 +55,9 @@ private:
     void judgeCh3(bool);
     void judgeCh4(bool);
 
-	int vChannels[10];
-	double vLengths[10];
-	double vYpos[10];
+	//int vChannels[10];
+	//double vLengths[10];
+	//double vYpos[10];
     int inum;//song中的块进行到哪一个了
     QTimer timer;
 	QTimeLine *atimer;
@@ -75,6 +75,5 @@ private:
     bool isPause;
 	bool isMusic;
 	bool isPress;
-    //double totalScore;
 };
 #endif

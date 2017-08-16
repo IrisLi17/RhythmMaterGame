@@ -43,11 +43,14 @@ void GameController::level1()
     scene.addItem(bline);
     scBox = new scoreBox();
     scene.addItem(scBox);    
-	player = new QMediaPlayer;
-	player->setMedia(QUrl::fromLocalFile(QString("1little_star.mp3")));
+	player = new QMediaPlayer();
+	player->setMedia(QUrl::fromLocalFile(QString("C:\\Users\\lyf\\Documents\\Visual Studio 2012\\Projects\\RhythmMater\\RhythmMater\\1little_star.mp3")));
+	//player->setMedia(QUrl::fromLocalFile(QString("C:/Users/lyf/Documents/Visual Studio 2012/Projects/RhythmMater/RhythmMater/4.wav")));
 	player->setVolume(30);
+	//player->play();
 	timer.start(1000/20);
-    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
+    connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));   
+	//qDebug()<<player->currentMedia().canonicalUrl().path();
 }
 void GameController::level2()
 {

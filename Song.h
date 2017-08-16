@@ -3,7 +3,7 @@
 #include <vector>
 class song
 {public:
-	enum songlib {first, second};
+	//enum songlib {first, second};
 	song(int);
 	~song();
 	//int getCurChannel(int inum);
@@ -19,8 +19,3 @@ private:
 };
 
 #endif
-
-//文件读入vChannels,vLengths,vYpos
-//初始化存到数据成员里面，根据传入参数决定读哪首曲子
-//getNext接口获取
-//GameControl里面调用
