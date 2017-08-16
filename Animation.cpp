@@ -1,6 +1,7 @@
 #include "Animation.h"
 #include <qpainter.h>
 #include <qpropertyanimation.h>
+#include <qdebug.h>
 
 animationMark::animationMark(int i)
 {
@@ -39,6 +40,7 @@ void animationMark::setPos(QPointF p)
 {
 	pos.setX(p.rx());
 	pos.setY(p.ry());
+//	qDebug()<<pos.rx()<<','<<pos.ry()<<'\n';
 }
 
 QRectF animationMark::boundingRect() const
@@ -52,4 +54,5 @@ void animationMark::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     painter->save();
 	painter->drawPixmap(boundingRect(),*mark,mark->rect());
     painter->restore();
+	qDebug()<<pos.rx()<<','<<pos.ry();
 }

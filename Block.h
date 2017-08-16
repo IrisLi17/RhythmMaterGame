@@ -23,6 +23,7 @@ public:
     void setEnterPos(double p);
     void setExitPos(double p);
     double calScore(double p1, double p2);
+    void setHighlight();
     //void handleCollision();
     void levelup(int level);
 	void advance(int);
@@ -40,6 +41,7 @@ private:
     double enterPos;
     double exitPos;
     double score;
+    bool isHighlight;
     GameController &gctrl;
 };
 #endif

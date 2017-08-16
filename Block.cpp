@@ -8,6 +8,7 @@ Block::Block(int ich, double dl, double dyp, GameController &gctrl):ichannel(ich
     dspeed = 3.0;
     enterPos = 0.0;
     exitPos = dl;
+    isHighlight = false;
 }
 
 Block::Block(const Block& b):gctrl(b.gctrl)
@@ -15,7 +16,7 @@ Block::Block(const Block& b):gctrl(b.gctrl)
 	ichannel = b.getCh();
 	dlength = b.getLength();
 	dypos = b.getYpos();
-	dspeed = 4.0;
+	dspeed = 3.0;
 	enterPos = 0.0;
 	exitPos = dlength;
 }
@@ -51,7 +52,10 @@ QRectF Block::boundingRect() const
 void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->save();
-	painter->drawPixmap(QRectF(-25.0,-dlength/2,50.0,dlength),QPixmap(QString("block.png")),QRectF(0,0,128,211));
+    if(!isHighlight)
+	    painter->drawPixmap(QRectF(-25.0,-dlength/2,50.0,dlength),QPixmap(QString("block.png")),QRectF(0,0,128,211));
+    else
+        painter->drawPixmap(QRectF(-25.0,-dlength/2,50.0,dlength),QPixmap(QString("block_after.png")),QRectF(0,0,129,312));
 	painter->restore();
 }
 
@@ -104,6 +108,12 @@ double Block::calScore(double pEnter, double pExit)
 		score = (pEnter - pExit)/dlength*100;
     return score;
 }
+
+void Block::setHighlight()
+{
+    isHighlight = true;
+}
+
 void Block::levelup(int level)
 {
     switch(level)

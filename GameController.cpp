@@ -39,6 +39,7 @@ void GameController::level1()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
+    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
@@ -63,6 +64,7 @@ void GameController::level2()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
+    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
@@ -84,6 +86,7 @@ void GameController::level3()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
+    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
@@ -162,6 +165,7 @@ void GameController::judgeCh1(bool repeat)
     else if(!repeat&&(!isPress))
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
+		curBlock->setHighlight();
 		isPress = true;
     }
 }
@@ -171,9 +175,11 @@ void GameController::judgeCh2(bool repeat)
     if(curBlock->getCh() != 1 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
         gameover();
-    else if(!repeat)
+    else if(!repeat&&(!isPress))
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
+		curBlock->setHighlight();
+		isPress = true;
     }
 }
 
@@ -182,9 +188,11 @@ void GameController::judgeCh3(bool repeat)
 	if(curBlock->getCh() != 2 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
-    else if(!repeat)
+    else if(!repeat&&(!isPress))
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
+		curBlock->setHighlight();
+		isPress = true;
     }
 }
 
@@ -193,9 +201,11 @@ void GameController::judgeCh4(bool repeat)
     if(curBlock->getCh() != 3 ||
         curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
 		gameover();
-    else if(!repeat)
+    else if(!repeat&&(!isPress))
     {
         curBlock->setEnterPos(bline->getYpos() - curBlock->getYpos());
+		curBlock->setHighlight();
+		isPress = true;
     }
 }
 
@@ -247,14 +257,14 @@ void GameController::animationStart(int i)
 	//可能要先移除mymark
 	if(scene.items().indexOf(mymark)!=-1)
 		scene.removeItem(mymark);
-	atimer = new QTimeLine(1000);
-    atimer->setFrameRange(0, 25);
+	atimer = new QTimeLine(500);
+    atimer->setFrameRange(0, 100);
 	mymark = new animationMark(i);
     animation = new QGraphicsItemAnimation;
     animation->setItem(mymark);
     animation->setTimeLine(atimer);
-	for(int i=0;i<25;i++)
-		animation->setPosAt(i,QPointF(100,-150));
+	for(int i=0;i<200;i++)
+		animation->setPosAt(i/200.0,QPointF(100,-150+0.3*i));
     
     //animation.setEasingCurve(QEasingCurve::OutBounce);
 	scene.addItem(mymark);
@@ -269,6 +279,7 @@ void GameController::redirect()
 	//if(inum == 0&&(curBlock->getYpos()+curBlock->getLength()) == 0.0)
 	if(inum == 0&&(player->state()!=QMediaPlayer::PlayingState))
 	{
+
 		player->play();
 		isMusic = true;
 	}
@@ -294,7 +305,10 @@ void GameController::redirect()
 			//return;
 		//}
 		if(!allBlocks.isEmpty())
+        {
 		    curBlock = allBlocks.first();
+            //curBlock->setHighlight();
+        }
 		else 
 		{
 			curBlock = NULL;
