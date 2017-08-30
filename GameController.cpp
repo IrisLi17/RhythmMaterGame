@@ -10,24 +10,19 @@
 #include <assert.h>
 #include <qmessagebox.h>
 
-GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isMusic(false),isPress(false)
+GameController::GameController(QGraphicsScene &scene, QObject *parent):QObject(parent),scene(scene),alive(false),isPause(true),isPress(false)
 {
     totalScore = 0.0;
-    //timer.start( 1000/33 );
 	inum = 0;
-	scene.installEventFilter(this);
-    //resume();   
+	scene.installEventFilter(this);  
 }
 
 GameController::~GameController()
 {
 
 }
-//void test()
-//{
-//	qDebug()<<"test";
-//}
 
+//新建第一关卡
 void GameController::level1()
 {
 	if(alive)
@@ -39,20 +34,15 @@ void GameController::level1()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
-    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
     scene.addItem(scBox);    
-	player = new QMediaPlayer();
-	player->setMedia(QUrl::fromLocalFile(QString("C:\\Users\\lyf\\Documents\\Visual Studio 2012\\Projects\\RhythmMater\\RhythmMater\\1little_star.mp3")));
-	//player->setMedia(QUrl::fromLocalFile(QString("C:/Users/lyf/Documents/Visual Studio 2012/Projects/RhythmMater/RhythmMater/4.wav")));
-	player->setVolume(30);
-	//player->play();
 	timer.start(1000/20);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));   
-	//qDebug()<<player->currentMedia().canonicalUrl().path();
 }
+
+//新建第二关卡
 void GameController::level2()
 {
 	if(alive)
@@ -64,17 +54,15 @@ void GameController::level2()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
-    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
     scene.addItem(scBox);    
-	player = new QMediaPlayer;
-	player->setMedia(QUrl::fromLocalFile(QString("2thu.mp3")));
-	player->setVolume(30);
 	timer.start(1000/20);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
 }
+
+//新建第三关卡
 void GameController::level3()
 {
 	if(alive)
@@ -86,38 +74,36 @@ void GameController::level3()
     allBlocks.append(temp);
     scene.addItem(temp);
     curBlock = temp;
-    //curBlock->setHighlight();
     bline = new baseLine();      
     scene.addItem(bline);
     scBox = new scoreBox();
     scene.addItem(scBox);    
-	player = new QMediaPlayer;
-	player->setMedia(QUrl::fromLocalFile(QString("3bee.mp3")));
-	player->setVolume(30);
 	timer.start(1000/20);
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));      
 }
 
+//游戏继续
 void GameController::resume()
 {
     connect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
-	//for(int i=0;i<10;i++)
-	//	allBlocks[i].advance(1);
 	isPause = false;
 }
 
+//游戏暂停
 void GameController::pause()
 {
     disconnect(&timer,SIGNAL(timeout()),&scene,SLOT(advance()));
     isPause = true;
 }
 
+//游戏结束
 void GameController::gameover()
 {
     
     alive = false;
-	//totalScore = 0.0;
 	inum = 0;
+
+	//清理allBlocks
 	if (!(allBlocks.isEmpty()))
 	{
 		foreach(Block* w,allBlocks)  
@@ -130,37 +116,36 @@ void GameController::gameover()
 			}
 		} 
 	}
+
+	//清理工作
 	delete curSong;
-	//scene.removeItem(bline);
 	delete bline;
-	//scene.removeItem(scBox);
 	delete scBox;
-	delete player;
 	curBlock = NULL; 	
 	curSong = NULL;
     bline = NULL;
 	scBox = NULL;
-	player = NULL;
-	//connect(&timer, SIGNAL(timeout()), &scene, SLOT(advance()));
-    //scene.clear();
+
 	isPause = true;
+
+	//取消计时器
 	disconnect(&timer, SIGNAL(timeout()), &scene, SLOT(advance())); 
+
+	//弹出消息框
     QMessageBox message(QMessageBox::NoIcon, "Game Over", "Your score: "+QString::number(totalScore)+"\nExit the game?", QMessageBox::Yes | QMessageBox::No, NULL); 
     if(message.exec() == QMessageBox::Yes) 
     { 
         exit(1);
     }
+
 	totalScore = 0.0;
-	//}
-	//else
-	//	exit(0);
 }
 
+//按下1键的处理
 void GameController::judgeCh1(bool repeat)
 {
     if(curBlock->getCh() != 0 ||
-        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())
-        
+        curBlock->getYpos() + curBlock->getLength() < bline->getYpos())       
 		gameover();
     else if(!repeat&&(!isPress))
     {
@@ -170,6 +155,7 @@ void GameController::judgeCh1(bool repeat)
     }
 }
 
+//按下2键的处理
 void GameController::judgeCh2(bool repeat)
 {
     if(curBlock->getCh() != 1 ||
@@ -183,6 +169,7 @@ void GameController::judgeCh2(bool repeat)
     }
 }
 
+//按下3键的处理
 void GameController::judgeCh3(bool repeat)
 {
 	if(curBlock->getCh() != 2 ||
@@ -196,6 +183,7 @@ void GameController::judgeCh3(bool repeat)
     }
 }
 
+//按下4键的处理
 void GameController::judgeCh4(bool repeat)
 {
     if(curBlock->getCh() != 3 ||
@@ -209,6 +197,7 @@ void GameController::judgeCh4(bool repeat)
     }
 }
 
+//键盘按下事件处理（过滤掉自动重复事件)
 void GameController::handleKeyDown(QKeyEvent *event)
 {
     if(!isPause&&alive)
@@ -219,42 +208,38 @@ void GameController::handleKeyDown(QKeyEvent *event)
 		case Qt::Key_2: judgeCh2(event->isAutoRepeat());break;
 		case Qt::Key_3: judgeCh3(event->isAutoRepeat());break;
 		case Qt::Key_4: judgeCh4(event->isAutoRepeat());break;
-        case Qt::Key_Space: pause();break;
+        case Qt::Key_Space: pause();break;//press space to pause
 		default: gameover();break;
         }
 
 	}
 	else if(alive&&event->key()==Qt::Key_Space) 
-        resume();//press any key to continue
+        resume();//press space to resume
 }
 
+//键盘松开事件处理
 void GameController::handleKeyUp(QKeyEvent *event)
 {
-//assert: curBlock->getYpos()< bline->getYpos();
 	if(!isPause&&alive&&event->key()!=Qt::Key_Space)
 	{
 	    curBlock->setExitPos(bline->getYpos() - curBlock->getYpos());
 		double add = curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
+		
+		//显示得分反馈
 		if(add<30)
-		    //QTimer::singleShot(0,this,SLOT(animationStart(1)));
-		    animationStart(1);
+		    animationStart(1);//good
 		else if(add<70)
-			//QTimer::singleShot(0,this,SLOT(animationStart(2)));
-			animationStart(2);
+			animationStart(2);//cool
 		else
-			//QTimer::singleShot(0,this,SLOT(animationStart(3)));
-			animationStart(3);
+			animationStart(3);//excellent
         totalScore += curBlock->calScore(curBlock->getEnterPos(),curBlock->getExitPos());
-        //加信号和槽做动画
         scBox->setScore(totalScore);
-	}
-
-	
+	}	
 }
 
+//得分反馈显示
 void GameController::animationStart(int i)
 {
-	//可能要先移除mymark
 	if(scene.items().indexOf(mymark)!=-1)
 		scene.removeItem(mymark);
 	atimer = new QTimeLine(500);
@@ -264,26 +249,16 @@ void GameController::animationStart(int i)
     animation->setItem(mymark);
     animation->setTimeLine(atimer);
 	for(int i=0;i<200;i++)
-		animation->setPosAt(i/200.0,QPointF(100,-150+0.3*i));
-    
-    //animation.setEasingCurve(QEasingCurve::OutBounce);
+		animation->setPosAt(i/200.0,QPointF(100,-150+0.3*i));    
 	scene.addItem(mymark);
     atimer->start();
-	//scene.removeItem(mymark);
-	//delete mymark;
-	//mymark = NULL;
 }
 
+//更新视图中的数据
 void GameController::redirect()
 {
-	//if(inum == 0&&(curBlock->getYpos()+curBlock->getLength()) == 0.0)
-	if(inum == 0&&(player->state()!=QMediaPlayer::PlayingState))
-	{
 
-		player->play();
-		isMusic = true;
-	}
-	
+	//添加block
     if(allBlocks.last()->getYpos()>= -300 && inum<curSong->size()-1)
     {
         inum+=1;
@@ -294,26 +269,24 @@ void GameController::redirect()
 			scene.addItem(temp);
 		}
     }
+
+	//移除block
 	if(curBlock->getYpos()>0)
 	{
 		scene.removeItem(curBlock);
 		Block *w = allBlocks.takeFirst();
 		delete w;
 		w = NULL;
-		//if(allBlocks.isEmpty()){
-		//	gameover();
-			//return;
-		//}
 		if(!allBlocks.isEmpty())
         {
 		    curBlock = allBlocks.first();
-            //curBlock->setHighlight();
         }
 		else 
 		{
 			curBlock = NULL;
-			//gameover();
 		}
+
+		//升级更改速度
 		foreach(Block* w,allBlocks)
 		{
 			if(totalScore>1000) w->levelup(3);
@@ -323,22 +296,19 @@ void GameController::redirect()
 	}
 }
 
+//事件过滤器
 bool GameController::eventFilter(QObject *object, QEvent *event)
 {
-	//if(event->type() == QEvent::KeyPress&&(!((QKeyEvent*)event)->isAutoRepeat()))
 	if(event->type() == QEvent::KeyPress)
     {
         handleKeyDown((QKeyEvent*)event);
 		isPress = true;
-        //blockDrop();
         return true;
     }
     else if(event->type() == QEvent::KeyRelease&&(!((QKeyEvent*)event)->isAutoRepeat())&&(isPress))
-    //else if(event->type() == QEvent::KeyRelease&&(isPress))
 	{
 		handleKeyUp((QKeyEvent*)event);
 		isPress = false;
-        //blockDrop();
         return true;
     }
 	else if(allBlocks.isEmpty()&&alive&&(!isPause))
@@ -349,21 +319,10 @@ bool GameController::eventFilter(QObject *object, QEvent *event)
 
     else 
     {
-        //blockDrop();
         return false;
     }
 }
 
-//void GameController::blockEnterline()
-//{
- //   handleKeyDown();
-//}
-
-//void GameController::blockExitline()
-//{
-//    handleKeyUp();
-//}
-//可能应该写scene的advance
 void GameController::advance(int step)
 {
 	if(!step)

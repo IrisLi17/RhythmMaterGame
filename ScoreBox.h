@@ -7,6 +7,7 @@ public:
     scoreBox(QGraphicsItem * parent = 0);
     ~scoreBox();
     void setScore(double);  
+
 private:
     double score;
 };

@@ -8,16 +8,13 @@
 #include <qtimeline.h>
 #include <qgraphicsitemanimation.h>
 
-//vChannels.assign(clist,clist + sizeof(clist)/sizeof(int));
-//vLengths.assign(lenlist,lenlist +sizeof(lenlist)/sizeof(double));
-
 class Block;
 class baseLine;
 class scoreBox;
 class song;
 class animationMark;
 
-//need to associate song to the game
+//游戏中心控制
 class GameController:public QObject
 {
     Q_OBJECT
@@ -25,22 +22,20 @@ class GameController:public QObject
 public:
     GameController(QGraphicsScene &scene, QObject *parent = 0);
     ~GameController();
-    void redirect();
-	double totalScore;
-	QList<Block *> allBlocks;
-	//void blockEnterline();
-    //void blockExitline();
+    void redirect();//更新视图中的数据
+
+	double totalScore;//总分
+	QList<Block *> allBlocks;//视图中所有小矩形块
 	
 public slots:
-    //void start();
-	void level1();
-	void level2();
-	void level3();
-    void pause();
-    void resume();
+	void level1();//关卡1
+	void level2();//关卡2
+	void level3();//关卡3
+    void pause(); //暂停
+    void resume();//继续
     void gameover();
-	void advance(int);
-	void animationStart(int);
+	void advance(int);       //重写更新
+	void animationStart(int);//得分反馈
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -48,23 +43,20 @@ protected:
 private:
     void handleKeyDown(QKeyEvent *event);
     void handleKeyUp(QKeyEvent*event);
-    //void blockDrop();
 	
 	void judgeCh1(bool);
     void judgeCh2(bool);
     void judgeCh3(bool);
     void judgeCh4(bool);
 
-	//int vChannels[10];
-	//double vLengths[10];
-	//double vYpos[10];
-    int inum;//song中的块进行到哪一个了
-    QTimer timer;
+    int inum;//当前allBlocks中最后一个block在所有block中的序号
+
+	QTimer timer;
 	QTimeLine *atimer;
-	QMediaPlayer *player;
+
+	//场景里的东西
     QGraphicsScene &scene;
-    Block *curBlock;
-    
+    Block *curBlock;    
     baseLine *bline;
     scoreBox *scBox;
     song *curSong;
@@ -73,7 +65,6 @@ private:
 
     bool alive;
     bool isPause;
-	bool isMusic;
 	bool isPress;
 };
 #endif

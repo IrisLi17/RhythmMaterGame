@@ -18,7 +18,6 @@ public:
 
 private slots:
 	void adjustSize();
-	//void newGame();
 	void gameHelp();
 	void about();
 
@@ -27,7 +26,7 @@ private:
 	void initSceneBackground();
     void createActions();
     void createMenus();
-	//QAction *newGameAction;
+
     QAction *level1Action;
     QAction *level2Action;
     QAction *level3Action;
@@ -37,6 +36,7 @@ private:
 	QAction *gameHelpAction;
 	QAction *aboutAction;
 	QAction *aboutQtAction;
+
 	QGraphicsScene *scene;
 	QGraphicsView *view;
 	GameController *game;

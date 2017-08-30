@@ -11,6 +11,7 @@ baseLine::~baseLine()
 
 }
 
+//÷ÿ–¥boundingRect
 QRectF baseLine::boundingRect() const
 {
     return QRectF(0.0,dypos-0.5,200.0,1.0);
@@ -23,6 +24,7 @@ QPainterPath baseLine::shape()
     return path;
 }
 
+//÷ÿ–¥paint
 void baseLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	std::clog<<"ready to paint baseline!"<<std::endl;

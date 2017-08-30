@@ -4,7 +4,6 @@
 #include "GameController.h"
 #include <qmessagebox.h>
 
-
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent),scene(new QGraphicsScene(this)),view(new QGraphicsView(scene,this)),game(new GameController(*scene, this))
 {
     setCentralWidget(view);
@@ -35,30 +34,26 @@ void MainWindow::initScene()
     scene->setSceneRect(0, -300, 200, 400);
 }
 
+//窗口背景
 void MainWindow::initSceneBackground()
 {
 	this->setObjectName("window");
-	view->setStyleSheet("border-image:url(milkyway1.png);");
- //QPixmap pixmap("milkyway.jpg");//设定图片
- //QPalette palette;//创建一个调色板对象
- //palette.setBrush(view->backgroundRole(),QBrush(pixmap));//用调色板的画笔把映射到pixmap上的图片画到frame.backgroundRole()这个背景上
- //view->setPalette(palette);//设置窗口调色板为palette，窗口和画笔相关联
- //view->setAutoFillBackground(true);//设置窗体自动填充背景
- //view->show();
+	view->setStyleSheet("border-image:url(:/images/milkyway1.png);");
 }
 
+//工具栏
 void MainWindow::createActions()
 {
     level1Action = new QAction(tr("&level 1"),this);
-    level1Action->setWhatsThis(tr("&?"));
+    level1Action->setWhatsThis(tr("&小星星"));
 	connect(level1Action,&QAction::triggered,game,&GameController::level1);
 
     level2Action = new QAction(tr("&level 2"),this);
-    level2Action->setWhatsThis(tr("&??"));
+    level2Action->setWhatsThis(tr("&校歌"));
     connect(level2Action,&QAction::triggered,game,&GameController::level2);
 
     level3Action = new QAction(tr("&level 3"),this);
-    level3Action->setWhatsThis(tr("&???"));
+    level3Action->setWhatsThis(tr("&野蜂飞舞"));
     connect(level3Action,&QAction::triggered,game,&GameController::level3);
 
     exitAction = new QAction(tr("&Exit"), this);
@@ -96,11 +91,8 @@ void MainWindow::createMenus()
     newGame->addAction(level2Action);
     newGame->addSeparator();
     newGame->addAction(level3Action);
-	//newGame->setAutoFillBackground(true);
 
     QMenu *options = menuBar()->addMenu(tr("&Options"));
-    //options->addAction(newGameAction);
-    //options->addSeparator();
     options->addAction(pauseAction);
     options->addAction(resumeAction);
     options->addSeparator();
@@ -112,15 +104,10 @@ void MainWindow::createMenus()
     help->addAction(aboutQtAction);
 }
 
-//void MainWindow::newGame()
-//{
-//	QTimer::singleShot(0,game,SLOT(gameOver()));
-//}
-
 void MainWindow::gameHelp()
 {
 	QMessageBox msbox;
-	msbox.setText("Press keys when the blocks intersect the base line");
+	msbox.setText("Press keys 1,2,3,4 to hit the blocks when the blocks intersect the base line.\nPress space to pause or continue.");
 	msbox.exec();
 }
 
